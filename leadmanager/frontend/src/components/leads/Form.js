@@ -14,14 +14,19 @@ export class Form extends Component {
     addLead: PropTypes.func.isRequired,
   };
 
-  onChange = (event) =>
+  onChange = event =>
     this.setState({ [event.target.name]: event.target.value });
 
-  onSubmit = (event) => {
+  onSubmit = event => {
     event.preventDefault();
     const { name, email, message } = this.state;
     const lead = { name, email, message };
     this.props.addLead(lead);
+    this.setState({
+      name: "",
+      email: "",
+      message: "",
+    });
   };
 
   render() {

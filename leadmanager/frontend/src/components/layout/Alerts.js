@@ -6,13 +6,19 @@ import PropTypes from "prop-types";
 export class Alerts extends Component {
   static propTypes = {
     error: PropTypes.object.isRequired,
+    message: PropTypes.object.isRequired,
   };
 
   componentDidUpdate(prevProps) {
-    const { error, alert } = this.props;
+    const { error, alert, message } = this.props;
     if (error !== prevProps.error) {
       error.msg.name && alert.error(`Name: ${error.msg.name.join()}`);
       error.msg.email && alert.error(`Email: ${error.msg.email.join()}`);
+    }
+
+    if (message !== prevProps.message) {
+      message.deleteLead && alert.success(message.deleteLead);
+      message.addLead && alert.success(message.addLead);
     }
   }
 
@@ -23,6 +29,7 @@ export class Alerts extends Component {
 
 const mapStateToProps = state => ({
   error: state.errorsReducer,
+  message: state.messageReducer,
 });
 
 export default connect(mapStateToProps)(withAlert()(Alerts));
