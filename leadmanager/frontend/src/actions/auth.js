@@ -7,6 +7,7 @@ import {
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
+  LOGOUT_SUCCESS,
 } from "./types";
 
 // Check token & load user
@@ -66,9 +67,38 @@ export const login = (username, password) => dispatch => {
       });
     })
     .catch(err => {
-      returnErrors(err.response.data, err.response.status);
+      dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({
         type: LOGIN_FAILURE,
       });
+    });
+};
+
+// Logout User
+export const logout = () => (dispatch, getState) => {
+  //Get token from state
+  const token = getState().authReducer.token;
+
+  // Headers
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  // If token, add to headers config
+  if (token) {
+    config.headers["Authorization"] = `Token ${token}`;
+  }
+
+  axios
+    .post("api/auth/logout/", null, config)
+    .then(res => {
+      dispatch({
+        type: LOGOUT_SUCCESS,
+      });
+    })
+    .catch(err => {
+      dispatch(returnErrors(err.response.data, err.response.status));
     });
 };
